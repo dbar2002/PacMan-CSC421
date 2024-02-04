@@ -4,7 +4,7 @@
 # educational purposes provided that (1) you do not distribute or publish
 # solutions, (2) you retain this notice, and (3) you provide clear
 # attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
-# 
+#
 # Attribution Information: The Pacman AI projects were developed at UC Berkeley.
 # The core projects and autograders were primarily created by John DeNero
 # (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
@@ -84,7 +84,7 @@ def depthFirstSearch(problem):
 
     print("Start State: " + str(problem.getStartState()))
     print("Is the start state ( " + str(problem.getStartState()) + " ) a goal?: " + str(problem.isGoalState(problem.getStartState())))
-    
+
     # Demonstrate how successor function works
     print("Successor function of initial start state ( " + str(problem.getStartState()) + " ) yields a tuple with 3 pieces:")
     print("\t(nextState, actionFromCurrStateToNextState, costToGetFromCurrStateToNextState)")
@@ -188,7 +188,32 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    start_state = problem.getStartState()
+    frontier = util.PriorityQueue()
+    frontier.push((start_state, []), 0)
+
+    explored = set()
+
+    while not frontier.isEmpty():
+        current_state, actions = frontier.pop()
+
+        if problem.isGoalState(current_state):
+            return actions
+
+        if current_state not in explored:
+            explored.add(current_state)
+
+            successors = problem.getSuccessors(current_state)
+            for next_state, action, step_cost in successors:
+                new_actions = actions + [action]
+                g = problem.getCostOfActions(new_actions)
+                h = heuristic(next_state, problem)
+                # Combine cost and heuristic for priority
+                priority = g + h
+                frontier.push((next_state, new_actions), priority)
+
+    return []
+
 
 
 # Abbreviations
