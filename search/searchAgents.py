@@ -40,6 +40,7 @@ from game import Actions
 import util
 import time
 import search
+from search import breadthFirstSearch
 
 class GoWestAgent(Agent):
     "An agent that goes West until it can't."
@@ -527,12 +528,13 @@ class ClosestDotSearchAgent(SearchAgent):
         """
         # Here are some useful elements of the startState
         startPosition = gameState.getPacmanPosition()
-        food = gameState.getFood()
-        walls = gameState.getWalls()
         problem = AnyFoodSearchProblem(gameState)
 
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # Use BFS to find the path to the closest dot
+        path = breadthFirstSearch(problem)
+
+        return path
+
 
 class AnyFoodSearchProblem(PositionSearchProblem):
     """
@@ -565,10 +567,9 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         The state is Pacman's position. Fill this in with a goal test that will
         complete the problem definition.
         """
-        x,y = state
+        x, y = state
+        return self.food[x][y]
 
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
 
 def mazeDistance(point1, point2, gameState):
     """
