@@ -368,20 +368,39 @@ def cornersHeuristic(state, problem):
     """
     A heuristic for the CornersProblem that you defined.
 
-      state:   The current search state
-               (a data structure you chose in your search problem)
+    state:   The current search state
+             (a data structure you chose in your search problem)
 
-      problem: The CornersProblem instance for this layout.
+    problem: The CornersProblem instance for this layout.
 
     This function should always return a number that is a lower bound on the
     shortest path from the state to a goal of the problem; i.e.  it should be
     admissible (as well as consistent).
     """
-    corners = problem.corners # These are the corner coordinates
-    walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
+    corners = problem.corners
+    walls = problem.walls
 
-    "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+    pacmanPosition, visitedCorners = state
+    unvisited_corners = [corners[i] for i in range(len(visitedCorners)) if not visitedCorners[i]]
+
+    if not unvisited_corners:  # If all corners are visited, heuristic is 0
+        return 0
+
+    # Calculate the Manhattan distances between the current position and all unvisited corners
+    distances_to_unvisited = [util.manhattanDistance(pacmanPosition, corner) for corner in unvisited_corners]
+
+    # Find the farthest distance among the unvisited corners
+    max_distance = max(distances_to_unvisited)
+
+    # Calculate the sum of distances between unvisited corners
+    sum_of_distances_between_corners = 0
+    for i in range(len(unvisited_corners)):
+        for j in range(i + 1, len(unvisited_corners)):
+            distance_between_corners = util.manhattanDistance(unvisited_corners[i], unvisited_corners[j])
+            sum_of_distances_between_corners += distance_between_corners
+
+    return max_distance + sum_of_distances_between_corners  # Return the sum of the farthest distance and distances between unvisited corners
+
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
