@@ -493,8 +493,15 @@ def foodHeuristic(state, problem):
     problem.heuristicInfo['wallCount']
     """
     position, foodGrid = state
-    "*** YOUR CODE HERE ***"
-    return 0
+    food_list = foodGrid.asList()
+
+    # Calculate the Manhattan distance to the nearest food pellet
+    distances_to_food = [util.manhattanDistance(position, food) for food in food_list]
+    if distances_to_food:
+        return min(distances_to_food)
+    else:
+        return 0  # If there are no food pellets left, heuristic value is 0
+
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
